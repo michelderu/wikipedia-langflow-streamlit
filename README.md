@@ -1,10 +1,10 @@
-# Wikipedia - What's up in the world? (Front-end)
+# Enterprise grade real-time RAG pipeline on Wikipedia content
 This project is part of the following Github projects:
 - [Wikipedia - What's up in the world? (Back-end)](https://github.com/michelderu/wikipedia-pulsar-astra)
 - [Wikipedia - What's up in the world? (Front-end)](https://github.com/michelderu/wikipedia-streamlit) **(THIS PROJECT)**
 
 ## Introduction
-Wikipedia is and amazing source of information 🧠. With all the real-time additions and updates of articles, it's a valuable source of information about what's happening in the world 🌍. Perhaps even faster than the news 📰. And that's what this project is all about: Accessing the most relevant articles from Wikipedia to answer your questions.
+Wikipedia is an amazing source of information 🧠. With all the real-time additions and updates of articles, it's a valuable source of information about what's happening in the world 🌍. Perhaps even faster than the news 📰. And that's what this project is all about: Accessing the most relevant articles from Wikipedia to answer your questions.
 
 Additionally, this project is a good example of how to build a rock-solid, scalable, and performant enterprise architecture 🚀. It makes use of the following technologies:
 - [Astra Streaming](https://www.datastax.com/products/datastax-astra-streaming): A fully managed Pulsar as a service that provides a real-time pub-sub messaging platform.
