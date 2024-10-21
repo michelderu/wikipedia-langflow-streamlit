@@ -9,18 +9,31 @@ Wikipedia is an amazing source of information 🧠. With all the real-time addit
 Additionally, this project is a good example of how to build a rock-solid, scalable, and performant enterprise architecture 🚀. It makes use of the following technologies:
 - [Astra Streaming](https://www.datastax.com/products/datastax-astra-streaming): A fully managed Pulsar as a service that provides a real-time pub-sub messaging platform.
 - [Astra DB](https://www.datastax.com/products/datastax-astra-db): A fully managed Cassandra DB as a service.
-- [Streamlit](https://streamlit.io/): A Python library for building prototype web apps.
+- [Streamlit](https://streamlit.io/): A Python library for prototyping web apps.
 
-Notable concepts used in this project are:
-- [Pulsar Functions](https://pulsar.apache.org/docs/functions-overview/): Enriching the data and JSON structure of the Wikipedia articles.
-- [Instructor](https://github.com/jxnl/instructor): Generate structured outputs powered by LLMs to enrich the Wikipedia articles.
-- [Astra Vector DB](https://docs.datastax.com/en/astra-db-serverless/get-started/concepts.html): A [Forrester Wave Leader](https://www.datastax.com/blog/forrester-wave-names-datastax-leader-vector-databases) in the Vector Database category.
-- [Astra Vectorize](https://docs.datastax.com/en/astra-db-serverless/databases/embedding-generation.html): Auto-generate embeddings with vectorize.
+🤩 Notable concepts used in this project are:
+- Back-end ⏪
+    - Publishing Wikipedia updates in real-time to a Pulsar Topic - Fire and forget with delivery guarantees.
+    - [Pulsar Functions](https://pulsar.apache.org/docs/functions-overview/): Enriching the data and JSON structure of the Wikipedia articles.
+    - Using a Pulsar Sink (function) to store the data in Astra DB using the Data API.
+- Front-end ⏩
+    - Using -just- Vector Search to classify data into news topics in real-time with no lag.
+    - Using [Instructor](https://github.com/jxnl/instructor) + an LLM to enrich the data further including Sentiment Analysis.
+    - Subscribing to the Pulsar Topic showing real-time Wikipedia updates flowing in.
+    - [Astra Vector DB](https://docs.datastax.com/en/astra-db-serverless/get-started/concepts.html): A [Forrester Wave Leader](https://www.datastax.com/blog/forrester-wave-names-datastax-leader-vector-databases) in the Vector Database category.
+    - [Astra Vectorize](https://docs.datastax.com/en/astra-db-serverless/databases/embedding-generation.html): Auto-generate embeddings with vectorize.
+    - Providing a Chat with Wikipedia using an LLM.
 
+## Why real-time streaming is so important?
+A lot of people are struggling to make the leap from RAG prototyping to production hardened RAG pipelines. Streaming solves that.
+> Streaming provides a no-more-sleepness-nights fire-and-forget way of updating your data.
+
+It provides guarantees for delivery with just 2 lines of code. Additionally, it fully decouples apps and backbones which still keep working if on or the other is temporarily unavailable.
+
+## Screenshots
 ![Application Interface](./assets/app-screenshot-1.png)
 ![Application Interface](./assets/app-screenshot-2.png)
 ![Application Interface](./assets/app-screenshot-3.png)
-
 
 ## The architecture
 This application is the back-end for the Wikipedia - What's up in the world? project. It consists of two parts:
