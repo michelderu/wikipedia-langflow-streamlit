@@ -24,7 +24,7 @@ Additionally, this project is a good example of how to build a rock-solid, scala
     - [Astra Vectorize](https://docs.datastax.com/en/astra-db-serverless/databases/embedding-generation.html): Auto-generate embeddings with vectorize.
     - Providing a Chat with Wikipedia using an LLM.
 
-## Why real-time streaming is so important?
+## Why is real-time streaming so important?
 A lot of people are struggling to make the leap from RAG prototyping to production hardened RAG pipelines. Streaming solves that.
 > Streaming provides a no-more-sleepness-nights fire-and-forget way of updating your data.
 
