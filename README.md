@@ -1,4 +1,4 @@
-# Enterprise grade real-time RAG pipeline on Wikipedia content
+# Enterprise-grade real-time RAG pipeline on Wikipedia
 This project is part of the following Github projects:
 - [Wikipedia - What's up in the world? (Back-end)](https://github.com/michelderu/wikipedia-pulsar-astra)
 - [Wikipedia - What's up in the world? (Front-end)](https://github.com/michelderu/wikipedia-streamlit) **(THIS PROJECT)**
