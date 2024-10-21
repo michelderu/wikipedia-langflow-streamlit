@@ -16,7 +16,7 @@ Notable concepts used in this project are:
 ![Application Interface](./assets/screenshot.png)
 
 ## The architecture
-This application is a front-end for the Wikipedia - What's up in the world? project. It consists of two parts:
+This application is the front-end for the Wikipedia - What's up in the world? project. It consists of two parts:
 1. A Pulsar Streaming project that consists of the following components:
     - A Pulsar producer that produces the Wikipedia articles to a Pulsar topic.
     - A Pulsar function that enriches the Wikipedia articles with and OpenAI LLM.
@@ -26,6 +26,14 @@ This application is a front-end for the Wikipedia - What's up in the world? proj
 ![Architecture](./assets/architecture.png)
 
 ## How to run the application
+
+### Create a virtual environment
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+Or use your favorite IDE's built-in function to create a virtual environment.
+
 ### Install the dependencies
 ```bash
 pip install -r requirements.txt
