@@ -28,7 +28,7 @@ Additionally, this project is a good example of how to build a rock-solid, scala
 A lot of people are struggling to make the leap from RAG prototyping to production hardened RAG pipelines. Streaming solves that.
 > Streaming provides a no-more-sleepness-nights fire-and-forget way of updating your data.
 
-It provides guarantees for delivery with just 2 lines of code. Additionally, it fully decouples apps and backbones which still keep working if on or the other is temporarily unavailable.
+It provides guarantees for delivery with just 2 lines of code. Additionally, it fully decouples apps and backbones which still keep working if one or the other is temporarily unavailable.
 
 ## Screenshots
 ![Application Interface](./assets/app-screenshot-1.png)
