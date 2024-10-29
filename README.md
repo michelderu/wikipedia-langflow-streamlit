@@ -1,4 +1,4 @@
-# Enterprise-grade real-time RAG pipeline on Wikipedia
+# Enterprise-grade real-time RAG pipeline on Wikipedia 🌎
 This project is part of the following Github projects:
 - [Wikipedia - What's up in the world? (Back-end)](https://github.com/michelderu/wikipedia-pulsar-astra)
 - [Wikipedia - What's up in the world? (Front-end)](https://github.com/michelderu/wikipedia-streamlit) **(THIS PROJECT)**
@@ -8,7 +8,7 @@ Wikipedia is an amazing source of information 🧠. With all the real-time addit
 
 Additionally, this project is a good example of how to build a rock-solid, scalable, and performant enterprise architecture 🚀. It makes use of the following technologies:
 - [Astra Streaming](https://www.datastax.com/products/datastax-astra-streaming): A fully managed Pulsar as a service that provides a real-time pub-sub messaging platform.
-- [Astra DB](https://www.datastax.com/products/datastax-astra-db): A fully managed Cassandra DB as a service.
+- [Astra DB](https://www.datastax.com/products/datastax-astra-db): A fully managed Cassandra DB w/ Vector Search as a service.
 - [Streamlit](https://streamlit.io/): A Python library for prototyping web apps.
 
 🤩 Notable concepts used in this project are:

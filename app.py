@@ -38,12 +38,12 @@ if "stream" not in st.session_state:
     st.session_state.stream = []
 
 # Cache the Pulsar client and consumer
-# @st.cache_resource(show_spinner='Connecting to Pulsar')
-# def init_pulsar():
-#     client = pulsar.Client(st.secrets["PULSAR_SERVICE"], authentication=pulsar.AuthenticationToken(st.secrets["PULSAR_TOKEN"]))
-#     consumer = client.subscribe(st.secrets["WIKI_STREAM"], subscription_name='my-subscription-1')
-#     return client, consumer
-# client, consumer = init_pulsar()
+@st.cache_resource(show_spinner='Connecting to Pulsar')
+def init_pulsar():
+    client = pulsar.Client(st.secrets["PULSAR_SERVICE"], authentication=pulsar.AuthenticationToken(st.secrets["PULSAR_TOKEN"]))
+    consumer = client.subscribe(st.secrets["PULSAR_TOPIC"], subscription_name='my-subscription-1')
+    return client, consumer
+client, consumer = init_pulsar()
 
 # Cache the Astra DB Vector Store and collection
 @st.cache_resource(show_spinner='Connecting to Astra')
@@ -140,7 +140,7 @@ def get_metadata(title, content):
         response_model=Metadata,
         messages=[
             {"role": "system", "content": "You're an expert in location data and you specialize in understanding where things are located based on the content"},
-            {"role": "system", "content": "You'also specialize in understaning what news category a piece of information falls into, and what the sentiment of the content is."},
+            {"role": "system", "content": "You'also specialize in understaning what news category the content falls into, and what the sentiment of the content is."},
             {"role": "user", "content": f"Only use the following content, when relevant augmented with public knowledge: {article}"},
             {"role": "user", "content": "Extract the requested metadata from the provided content into a JSON format"}
         ]
@@ -296,5 +296,3 @@ with tab5:
     question = custom_question if question == "Ask your own question..." else question
     if update_button:
         show_chat_qa(question, date if date_toggle else None, answer_placeholder, sources_placeholder)
-
-
