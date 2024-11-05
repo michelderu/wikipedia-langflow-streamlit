@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import json
+import json, time, requests
 
 import pulsar
 from astrapy import DataAPIClient
@@ -12,8 +12,6 @@ from pydantic import BaseModel, Field
 import folium
 from streamlit_folium import st_folium
 
-import requests
-
 # Main app
 st.set_page_config(page_title="Wikipedia - What's up in the world", page_icon="🌎")
 col1, col2 = st.columns([0.8, 0.2])
@@ -23,8 +21,6 @@ with col2:
     st.image("https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png", use_column_width=True)
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Real-time updates", "Political news", "Celebrities", "Stock", "Search the world", "Chat with the world"])
 
-with st.sidebar:
-    st.text_input("Langflow REST endpoint", key="langflow_endpoint")
 #
 # We use PyDantic and Instructor in combination with a LLM to find attributes and turn them into structured data.
 # Attributes relative to source code
@@ -69,7 +65,7 @@ def show_wiki_update(stream, placeholder):
     data = stream[-10:][::-1]
     content = ""
     for item in data:
-        content += f"**[{item['title']}]({item['url']})**\\\n📅&nbsp;&nbsp;{item['date']}&nbsp;&nbsp;&nbsp;🕑&nbsp;{item['timestamp'].split('T')[1].split('.')[0]}&nbsp;&nbsp;&nbsp;#️⃣&nbsp;&nbsp;{item['count']}\n\n *{item['content'][0:400]}*...\n\n"
+        content += f"**[{item['title']}]({item['source']})**\\\n📅&nbsp;&nbsp;{item['date']}&nbsp;&nbsp;&nbsp;🕑&nbsp;{item['timestamp'].split('T')[1].split('.')[0]}&nbsp;&nbsp;&nbsp;#️⃣&nbsp;&nbsp;{item['count']}\n\n *{item['content'][0:400]}*...\n\n"
     placeholder.markdown(content)
 
 # Get the wiki updates from the pulsar stream
@@ -107,7 +103,7 @@ def show_chat_qa(question, date, answer_placeholder, sources_placeholder):
         projection={
             "content",
             "metadata.title", 
-            "metadata.url", 
+            "metadata.source", 
             "metadata.date"
         },
         include_similarity=True
@@ -118,7 +114,7 @@ def show_chat_qa(question, date, answer_placeholder, sources_placeholder):
     sources = ""
     for result in results:
         context += f"{result['metadata']['title']}\n{result['content']}\n\n"
-        sources += f"**[{result['metadata']['title']}]({result['metadata']['url']})**&nbsp;&nbsp;&nbsp;📅&nbsp;&nbsp;{result['metadata']['date']}&nbsp;&nbsp;&nbsp;📈&nbsp;{round(result['$similarity'] * 100, 1)}%\\\n"
+        sources += f"**[{result['metadata']['title']}]({result['metadata']['source']})**&nbsp;&nbsp;&nbsp;📅&nbsp;&nbsp;{result['metadata']['date'] if result['metadata'].get('date') else 'Not provided'}&nbsp;&nbsp;&nbsp;📈&nbsp;{round(result['$similarity'] * 100, 1)}%\\\n"
 
     # Now pass the context to the Chat Completion
     client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
@@ -171,8 +167,8 @@ def show_search_results(results, placeholder):
             metadata = get_metadata(result['metadata']['title'], result['content'])
             all_metadata.append(metadata)
             sentiment_emoji = "😊" if int(metadata['sentiment']) > 55 else "😞" if int(metadata['sentiment']) < 45 else "😐"
-            st.markdown(f"""**[{result['metadata']['title']}]({result['metadata']['url']})**\\
-📅&nbsp;&nbsp;{result['metadata']['date']}&nbsp;&nbsp;&nbsp;
+            st.markdown(f"""**[{result['metadata']['title']}]({result['metadata']['source']})**\\
+📅&nbsp;&nbsp;{result['metadata']['date'] if result['metadata'].get('date') else 'Not provided'}&nbsp;&nbsp;&nbsp;
 📈&nbsp;{round(result['$similarity'] * 100, 1)}%&nbsp;&nbsp;&nbsp;
 📍&nbsp;{metadata['country']}&nbsp;&nbsp;&nbsp;
 🗂️&nbsp;{metadata['category']}&nbsp;&nbsp;&nbsp;
@@ -208,6 +204,7 @@ with tab1:
     if subscribed:
         while True:
             show_wiki_updates(placeholder)
+            time.sleep(1)
 
 # Politics
 with tab2:
@@ -228,7 +225,7 @@ with tab2:
             projection={
                 "content",
                 "metadata.title", 
-                "metadata.url", 
+                "metadata.source", 
                 "metadata.date"
             },
             include_similarity=True,
@@ -256,7 +253,7 @@ with tab3:
             projection={
                 "content",
                 "metadata.title", 
-                "metadata.url", 
+                "metadata.source", 
                 "metadata.date"
             },
             include_similarity=True,
@@ -283,7 +280,7 @@ with tab4:
             projection={
                 "content",
                 "metadata.title", 
-                "metadata.url", 
+                "metadata.source", 
                 "metadata.date"
             },
             include_similarity=True,
@@ -309,9 +306,8 @@ with tab5:
 
 # Chat with the world
 with tab6:
-    if not st.session_state.langflow_endpoint:
-        st.warning("Please enter the Langflow REST endpoint in the sidebar")
-    else:
+    langflow_endpoint = st.text_input("Langflow REST endpoint", key="langflow_endpoint")
+    if langflow_endpoint and langflow_endpoint.startswith("http"):
         messages = st.container(height=600)
 
         if question := st.chat_input("Say something"):
