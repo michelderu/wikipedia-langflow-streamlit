@@ -47,6 +47,12 @@ This application is the back-end for the Wikipedia - What's up in the world? pro
 
 ## How to run the application
 
+### Configuration
+First you need to configure the `.streamlit/secrets.toml` file with the correct values. In order to do so, you need to:
+- Copy the `secrets.toml.example` file to `secrets.toml`
+- Enter the correct values for the variables
+- You can use the values from the back-end project [Wikipedia - What's up in the world? (Back-end)](https://github.com/michelderu/wikipedia-pulsar-astra)
+
 ### Create a virtual environment
 ```bash
 python -m venv .venv
