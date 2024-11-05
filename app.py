@@ -69,7 +69,7 @@ def show_wiki_update(stream, placeholder):
     data = stream[-10:][::-1]
     content = ""
     for item in data:
-        content += f"**[{item['title']}]({item['url']})**\\\n📅&nbsp;&nbsp;{item['metadata']['date']}&nbsp;&nbsp;&nbsp;🕑&nbsp;{item['metadata']['timestamp'].split('T')[1].split('.')[0]}&nbsp;&nbsp;&nbsp;#️⃣&nbsp;&nbsp;{item['count']}\n\n *{item['content'][0:400]}*...\n\n"
+        content += f"**[{item['title']}]({item['url']})**\\\n📅&nbsp;&nbsp;{item['date']}&nbsp;&nbsp;&nbsp;🕑&nbsp;{item['timestamp'].split('T')[1].split('.')[0]}&nbsp;&nbsp;&nbsp;#️⃣&nbsp;&nbsp;{item['count']}\n\n *{item['content'][0:400]}*...\n\n"
     placeholder.markdown(content)
 
 # Get the wiki updates from the pulsar stream
