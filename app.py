@@ -113,11 +113,9 @@ def show_chat_qa(question, date, answer_placeholder, sources_placeholder):
     context = ""
     sources = ""
     for result in results:
-        print("RESULT", result)
         context += f"{result['metadata']['title']}\n{result['$vectorize']}\n\n"
         sources += f"**[{result['metadata']['title']}]({result['metadata']['source']})**&nbsp;&nbsp;&nbsp;📅&nbsp;&nbsp;{result['metadata']['date'] if result['metadata'].get('date') else 'Not provided'}&nbsp;&nbsp;&nbsp;📈&nbsp;{round(result['$similarity'] * 100, 1)}%\\\n"
 
-    print("CONTEXT", context)
     # Now pass the context to the Chat Completion
     client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
     response = client.chat.completions.create(
@@ -331,7 +329,6 @@ with tab6:
             }
             response = requests.post(st.session_state.langflow_endpoint, headers={"Authorization": f"Bearer {st.secrets['ASTRA_DB_APPLICATION_TOKEN']}"}, json=payload)
             result = response.json()
-            print(result)
             result = result['outputs'][0]['outputs'][0]['outputs']['message']['message']['text']
 
             st.session_state.chat_thread.append({
