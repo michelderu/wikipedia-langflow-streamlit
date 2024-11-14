@@ -101,10 +101,10 @@ def show_chat_qa(question, date, answer_placeholder, sources_placeholder):
         },
         limit=10,
         projection={
-            "content",
             "metadata.title", 
             "metadata.source", 
-            "metadata.date"
+            "metadata.date", 
+            "$vectorize"
         },
         include_similarity=True
     )
@@ -113,15 +113,17 @@ def show_chat_qa(question, date, answer_placeholder, sources_placeholder):
     context = ""
     sources = ""
     for result in results:
-        context += f"{result['metadata']['title']}\n{result['content']}\n\n"
+        print("RESULT", result)
+        context += f"{result['metadata']['title']}\n{result['$vectorize']}\n\n"
         sources += f"**[{result['metadata']['title']}]({result['metadata']['source']})**&nbsp;&nbsp;&nbsp;📅&nbsp;&nbsp;{result['metadata']['date'] if result['metadata'].get('date') else 'Not provided'}&nbsp;&nbsp;&nbsp;📈&nbsp;{round(result['$similarity'] * 100, 1)}%\\\n"
 
+    print("CONTEXT", context)
     # Now pass the context to the Chat Completion
     client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": "You're an expert in world news and you specialize in summarizing information from the news."},
+            {"role": "system", "content": "You're a news anchor and you make sure it's explained in a way that is easy to understand."},
             {"role": "system", "content": "Only use the information provided in the context to answer the question. When there is no relevant information, just say so."},
             {"role": "system", "content": "When helpful, make use of captions or titles to better understand the content. Also you can make use of numbered lists to better structure the information."},
             {"role": "user", "content": f"Context: {context}"},
@@ -164,7 +166,7 @@ def show_search_results(results, placeholder):
 
     with placeholder:
         for result in results:
-            metadata = get_metadata(result['metadata']['title'], result['content'])
+            metadata = get_metadata(result['metadata']['title'], result['$vectorize'])
             all_metadata.append(metadata)
             sentiment_emoji = "😊" if int(metadata['sentiment']) > 55 else "😞" if int(metadata['sentiment']) < 45 else "😐"
             st.markdown(f"""**[{result['metadata']['title']}]({result['metadata']['source']})**\\
@@ -173,7 +175,7 @@ def show_search_results(results, placeholder):
 📍&nbsp;{metadata['country']}&nbsp;&nbsp;&nbsp;
 🗂️&nbsp;{metadata['category']}&nbsp;&nbsp;&nbsp;
 {sentiment_emoji}&nbsp;{metadata['sentiment']}\n\n
-*{result['content'][0:400]}*...\n\n"""
+*{result['$vectorize'][0:400]}*...\n\n"""
             )
 
         st.subheader("Where did it happen?")
@@ -223,7 +225,7 @@ with tab2:
                 "$vectorize": "content that contains political information"
             },
             projection={
-                "content",
+                "$vectorize",
                 "metadata.title", 
                 "metadata.source", 
                 "metadata.date"
@@ -251,7 +253,7 @@ with tab3:
                 "$vectorize": "content about celebrities"
             },
             projection={
-                "content",
+                "$vectorize",
                 "metadata.title", 
                 "metadata.source", 
                 "metadata.date"
@@ -278,7 +280,7 @@ with tab4:
                 "$vectorize": "content that has an impact on stock prices"
             },
             projection={
-                "content",
+                "$vectorize",
                 "metadata.title", 
                 "metadata.source", 
                 "metadata.date"
